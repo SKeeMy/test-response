@@ -25,10 +25,10 @@ export default function Clients() {
 			try {
 				//не понимаю, апи не настроен на вывод фильтрации, могу на фронте конечно это сделать
 				const response = await fetch(
-					`https://cors-anywhere.herokuapp.com/https://pastebin.com/raw/EEheJFna?page=${currentPage}&limit=${limit}`,
+					`http://46.8.220.194?page=${currentPage}&limit=${limit}`,
 					{
 						headers: {
-							'Access-Control-Allow-Origin': 'https://pastebin.com/',
+							'Access-Control-Allow-Origin': '*',
 						},
 					}
 				)
