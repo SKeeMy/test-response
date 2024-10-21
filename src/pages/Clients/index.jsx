@@ -97,7 +97,7 @@ export default function Clients() {
 									surname={client.surname}
 									key={client.clientid}
 									checkMore={() => setIsPopupVisible(prev => !prev)}
-									src={`/assets/images/client-${index + 1}.png`}
+									src={`client-${index + 1}.png`}
 									name={client.name}
 									phone={client.phone}
 									visits={client.visits}
