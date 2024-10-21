@@ -18,11 +18,12 @@ export default function Clients() {
 	const [currentPage, setCurrentPage] = useState(1)
 	const [totalPages, setTotalPages] = useState(1)
 	const [limit, setLimit] = useState(10)
-
+	const [loading, setLoading] = useState(false)
 	useBlackout([isAddFormVisible, isPopupVisible])
 	useEffect(() => {
 		const fetchPasteData = async () => {
 			try {
+				setLoading(true)
 				//не понимаю, апи не настроен на вывод фильтрации, могу на фронте конечно это сделать
 				const response = await fetch(
 					`https://cors-anywhere.herokuapp.com/http://46.8.220.194?page=${currentPage}&limit=${limit}`,
@@ -34,6 +35,7 @@ export default function Clients() {
 				)
 				const data = await response.json()
 				setClients(data)
+				setLoading(false)
 			} catch (error) {
 				console.error('Error fetching paste data:', error)
 			}
@@ -73,78 +75,82 @@ export default function Clients() {
 				setIsPopup={setIsAddFormVisible}
 				setIsVisible={setIsActiveMenu}
 			/>
-			<div className='clients'>
-				<div className='clients__container scrollbar'>
-					<div className='clients__table'>
-						<div className='clients__table-row'>
-							<span className='clients__table-header'>
-								Клиент
-								<svg className='clients__table-icon' height='14' width='9'>
-									<use xlinkHref='/src/assets/icons/Clients_Sprite.svg#icon-clients-sorting' />
-								</svg>
-							</span>
-							<span className='clients__table-header'>Визиты</span>
-							<span className='clients__table-header'>Оплачено</span>
-							<span className='clients__table-header'>Средний чек</span>
-							<span className='clients__table-header'>Последний визит</span>
-							<span className='clients__table-header'>День рождения</span>
+			{!loading ? (
+				<div className='clients'>
+					<div className='clients__container scrollbar'>
+						<div className='clients__table'>
+							<div className='clients__table-row'>
+								<span className='clients__table-header'>
+									Клиент
+									<svg className='clients__table-icon' height='14' width='9'>
+										<use xlinkHref='/src/assets/icons/Clients_Sprite.svg#icon-clients-sorting' />
+									</svg>
+								</span>
+								<span className='clients__table-header'>Визиты</span>
+								<span className='clients__table-header'>Оплачено</span>
+								<span className='clients__table-header'>Средний чек</span>
+								<span className='clients__table-header'>Последний визит</span>
+								<span className='clients__table-header'>День рождения</span>
+							</div>
+							{clients?.data?.Clients.map((client, index) => (
+								<Client
+									surname={client.surname}
+									key={client.clientid}
+									checkMore={() => setIsPopupVisible(prev => !prev)}
+									src={`../../assets/images/client-${index + 1}.png`}
+									name={client.name}
+									phone={client.phone}
+									visits={client.visits}
+									payed={client.Info.Stats[0].Passed}
+									averageCheck={client.Info.Stats[0].AverageCheck}
+									lastVisit={client.Info.Visits[0].Date}
+									date={client.dateofbirth}
+								/>
+							))}
 						</div>
-						{clients?.data?.Clients.map((client, index) => (
-							<Client
-								surname={client.surname}
-								key={client.clientid}
-								checkMore={() => setIsPopupVisible(prev => !prev)}
-								src='client-1.png'
-								name={client.name}
-								phone={client.phone}
-								visits={client.visits}
-								payed={client.Info.Stats[0].Passed}
-								averageCheck={client.Info.Stats[0].AverageCheck}
-								lastVisit={client.Info.Visits[0].Date}
-								date={client.dateofbirth}
-							/>
-						))}
 					</div>
-				</div>
-				<div className='clients__pagination'>
-					<button
-						style={currentPage === 1 ? { display: 'none' } : {}}
-						onClick={() => handlePageArrow('prev')}
-						className='clients__pagination-arrow left'
-					>
-						<svg className='clients__pagination-icon' height='17' width='17'>
-							<use xlinkHref='/src/assets/icons/Clients_Sprite.svg#icon-clients-arrow-left' />
-						</svg>
-					</button>
-					{buttons}
+					<div className='clients__pagination'>
+						<button
+							style={currentPage === 1 ? { display: 'none' } : {}}
+							onClick={() => handlePageArrow('prev')}
+							className='clients__pagination-arrow left'
+						>
+							<svg className='clients__pagination-icon' height='17' width='17'>
+								<use xlinkHref='/src/assets/icons/Clients_Sprite.svg#icon-clients-arrow-left' />
+							</svg>
+						</button>
+						{buttons}
 
-					<button
-						style={
-							currentPage === clients?.data?.QuantityPages
-								? { display: 'none' }
-								: {}
-						}
-						onClick={() => handlePageArrow('next')}
-						className='clients__pagination-arrow right'
-					>
-						<svg className='clients__pagination-icon' height='17' width='17'>
-							<use xlinkHref='/src/assets/icons/Clients_Sprite.svg#icon-clients-arrow-right' />
-						</svg>
-					</button>
-					<div>
-						<label style={{ color: 'black' }}>
-							Limit:
-							<input
-								type='number'
-								value={limit}
-								onChange={handleLimitChange}
-								min='1'
-								max='100'
-							/>
-						</label>
+						<button
+							style={
+								currentPage === clients?.data?.QuantityPages
+									? { display: 'none' }
+									: {}
+							}
+							onClick={() => handlePageArrow('next')}
+							className='clients__pagination-arrow right'
+						>
+							<svg className='clients__pagination-icon' height='17' width='17'>
+								<use xlinkHref='/src/assets/icons/Clients_Sprite.svg#icon-clients-arrow-right' />
+							</svg>
+						</button>
+						<div>
+							<label style={{ color: 'black' }}>
+								Limit:
+								<input
+									type='number'
+									value={limit}
+									onChange={handleLimitChange}
+									min='1'
+									max='100'
+								/>
+							</label>
+						</div>
 					</div>
 				</div>
-			</div>
+			) : (
+				<div>Загрузка данных...</div>
+			)}
 			<button
 				onClick={() => setIsAddFormVisible(prev => !prev)}
 				className='clients__add'
