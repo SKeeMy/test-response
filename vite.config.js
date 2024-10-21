@@ -9,7 +9,7 @@ export default defineConfig({
 			'/raw': {
 				target: 'https://pastebin.com/',
 				changeOrigin: true,
-				secure: false,
+				secure: true,
 			},
 		},
 	},

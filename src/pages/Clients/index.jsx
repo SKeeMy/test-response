@@ -25,10 +25,10 @@ export default function Clients() {
 			try {
 				//не понимаю, апи не настроен на вывод фильтрации, могу на фронте конечно это сделать
 				const response = await fetch(
-					`https://pastebin.com/raw/EEheJFna?page=${currentPage}&limit=${limit}`,
+					`/raw/EEheJFna?page=${currentPage}&limit=${limit}`,
 					{
 						headers: {
-							'Access-Control-Allow-Origin': '*',
+							'Access-Control-Allow-Origin': 'https://pastebin.com/',
 						},
 					}
 				)
