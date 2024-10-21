@@ -54,7 +54,7 @@ export default function Clients() {
 		}
 	}
 
-	const buttons = Array(clients.data.QuantityPages) // можно поменять значение для теста запроса тк сейчас одна кнопка
+	const buttons = Array(clients?.data?.QuantityPages) // можно поменять значение для теста запроса тк сейчас одна кнопка
 		.fill(0)
 		.map((_, i) => (
 			<button onClick={() => handlePageChange(i + 1)} key={i}>
