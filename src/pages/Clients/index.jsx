@@ -24,9 +24,14 @@ export default function Clients() {
 		const fetchPasteData = async () => {
 			try {
 				//не понимаю, апи не настроен на вывод фильтрации, могу на фронте конечно это сделать
+
 				const response = await fetch(
-					`https://pastebin.com/raw/EEheJFna?page=${currentPage}&limit=${limit}`
+					`https://pastebin.com/raw/EEheJFna?page=${currentPage}&limit=${limit}`,
+					{
+						mode: 'no-cors',
+					}
 				)
+
 				const data = await response.json()
 				setClients(data)
 			} catch (error) {
